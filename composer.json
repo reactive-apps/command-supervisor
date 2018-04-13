@@ -1,25 +1,37 @@
 {
     "name": "reactive-apps/command-supervisor",
     "require": {
-        "api-clients/supervisord": "dev-master"
+        "api-clients/supervisord": "^1.0",
+        "cakephp/chronos": "^1.1",
+        "psr/log": "^1.0",
+        "reactive-apps/command": "dev-master",
+        "recoil/react": "^1.0",
+        "recoil/recoil": "^1.0"
     },
     "require-dev": {
         "api-clients/test-utilities": "^4.2"
+    },
+    "autoload": {
+        "psr-4": {
+            "ReactiveApps\\Command\\Supervisor\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "ReactiveApps\\Tests\\Command\\Supervisor\\": "tests/"
+        }
+    },
+    "extra": {
+        "reactive-apps": {
+            "command": {
+                "ReactiveApps\\Command\\Supervisor": "src"
+            }
+        }
     },
     "config": {
         "sort-packages": true,
         "platform": {
             "php": "7.0"
-        }
-    },
-    "autoload": {
-        "psr-4": {
-            "App\\": "src/"
-        }
-    },
-    "autoload-dev": {
-        "psr-4": {
-            "Tests\\": "tests/"
         }
     },
     "scripts": {
