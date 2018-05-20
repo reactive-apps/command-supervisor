@@ -8,17 +8,12 @@ use ApiClients\Client\Supervisord\Resource\ProgramInterface;
 use Cake\Chronos\Chronos;
 use Psr\Log\LoggerInterface;
 use ReactiveApps\Command\Command;
-use Recoil\Kernel;
+use ReactiveApps\Rx\Shutdown;
 use Rx\React\Promise;
 
 final class RestartSupervisor implements Command
 {
     const COMMAND = 'restart-supervisor';
-
-    /**
-     * @var Kernel
-     */
-    private $kernel;
 
     /**
      * @var AsyncClientInterface
@@ -31,32 +26,38 @@ final class RestartSupervisor implements Command
     private $logger;
 
     /**
-     * @param Kernel $kernel
+     * @var Shutdown
+     */
+    private $shutdown;
+
+    /**
      * @param AsyncClientInterface $supervisor
      * @param LoggerInterface $logger
+     * @param Shutdown $shutdown
      */
-    public function __construct(Kernel $kernel, AsyncClientInterface $supervisor, LoggerInterface $logger)
+    public function __construct(AsyncClientInterface $supervisor, LoggerInterface $logger, Shutdown $shutdown)
     {
-        $this->kernel = $kernel;
         $this->supervisor = $supervisor;
         $this->logger = $logger;
+        $this->shutdown = $shutdown;
     }
 
     public function __invoke()
     {
-        $this->kernel->execute(function () {
-            /** @var Program $program */
-            $program = yield Promise::fromObservable(
-                $this->supervisor->programs()->filter(function (ProgramInterface $program) {
-                    return $program->name() === getenv('SUPERVISOR_NAME');
-                })->take(1)
-            );
+        /** @var Program $program */
+        $program = yield Promise::fromObservable(
+            $this->supervisor->programs()->filter(function (ProgramInterface $program) {
+                return $program->name() === getenv('SUPERVISOR_NAME');
+            })->take(1)
+        );
 
-            $this->logger->info('"' . $program->name() . '" has been up and running for ' . $this->formatUptime($program) . ', restarting');
-            $program = yield $program->restart();
+        $this->logger->info('"' . $program->name() . '" has been up and running for ' . $this->formatUptime($program) . ', restarting');
 
-            $this->logger->info('Restarted "' . $program->name() . '" up and running for ' . $this->formatUptime($program));
-        });
+        $program = yield $program->restart();
+
+        $this->logger->info('Restarted "' . $program->name() . '" up and running for ' . $this->formatUptime($program));
+
+        $this->shutdown->onCompleted();
     }
 
     private function formatUptime(ProgramInterface $program): string

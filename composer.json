@@ -1,10 +1,12 @@
 {
     "name": "reactive-apps/command-supervisor",
     "require": {
+        "php": "^7.2",
         "api-clients/supervisord": "^1.0",
         "cakephp/chronos": "^1.1",
         "psr/log": "^1.0",
         "reactive-apps/command": "dev-master",
+        "reactive-apps/rx-streams": "dev-master",
         "recoil/react": "^1.0",
         "recoil/recoil": "^1.0"
     },
@@ -31,7 +33,7 @@
     "config": {
         "sort-packages": true,
         "platform": {
-            "php": "7.0"
+            "php": "7.2"
         }
     },
     "scripts": {
