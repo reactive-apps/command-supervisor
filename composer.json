@@ -24,9 +24,17 @@
         }
     },
     "extra": {
+        "php-di-definitions": {
+            "di": [
+                "config/di/supervisor.php"
+            ]
+        },
         "reactive-apps": {
             "command": {
                 "ReactiveApps\\Command\\Supervisor": "src"
+            },
+            "required-config": {
+                "supervisor.process.name": "The name of the process to restart"
             }
         }
     },

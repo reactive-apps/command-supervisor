@@ -31,15 +31,22 @@ final class RestartSupervisor implements Command
     private $shutdown;
 
     /**
+     * @var string
+     */
+    private $name;
+
+    /**
      * @param AsyncClientInterface $supervisor
      * @param LoggerInterface $logger
      * @param Shutdown $shutdown
+     * @param string $name
      */
-    public function __construct(AsyncClientInterface $supervisor, LoggerInterface $logger, Shutdown $shutdown)
+    public function __construct(AsyncClientInterface $supervisor, LoggerInterface $logger, Shutdown $shutdown, string $name)
     {
         $this->supervisor = $supervisor;
         $this->logger = $logger;
         $this->shutdown = $shutdown;
+        $this->name = $name;
     }
 
     public function __invoke()
@@ -47,7 +54,7 @@ final class RestartSupervisor implements Command
         /** @var Program $program */
         $program = yield Promise::fromObservable(
             $this->supervisor->programs()->filter(function (ProgramInterface $program) {
-                return $program->name() === getenv('SUPERVISOR_NAME');
+                return $program->name() === $this->name;
             })->take(1)
         );
 
