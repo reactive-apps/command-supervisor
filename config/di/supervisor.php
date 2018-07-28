@@ -9,5 +9,5 @@ return [
     RestartSupervisor::class => \DI\factory(function (AsyncClientInterface $supervisor, LoggerInterface $logger, Shutdown $shutdown, string $name) {
         return new HttpServer($supervisor, $logger, $shutdown, $name);
     })
-    ->parameter('name', \DI\get('supervisor.process.name')),
+    ->parameter('name', \DI\get('config.supervisor.process.name')),
 ];
