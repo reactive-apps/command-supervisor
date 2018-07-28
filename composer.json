@@ -11,7 +11,7 @@
         "recoil/recoil": "^1.0"
     },
     "require-dev": {
-        "api-clients/test-utilities": "^4.2"
+        "api-clients/test-utilities": "^5.0"
     },
     "autoload": {
         "psr-4": {
