@@ -51,6 +51,27 @@ final class RestartSupervisor implements Command
 
     public function __invoke()
     {
+        if ($this->name === '') {
+            yield from $this->restartSupervisor();
+        }
+
+        yield from $this->restartProgram();
+
+        $this->shutdown->onCompleted();
+    }
+
+    private function restartSupervisor()
+    {
+        $this->logger->info('Restarting supervisor');
+
+        yield $this->supervisor->restart();
+
+        $this->logger->info('Supervisor restarted');
+    }
+
+    private function restartProgram()
+    {
+
         /** @var Program $program */
         $program = yield Promise::fromObservable(
             $this->supervisor->programs()->filter(function (ProgramInterface $program) {
@@ -63,8 +84,6 @@ final class RestartSupervisor implements Command
         $program = yield $program->restart();
 
         $this->logger->info('Restarted "' . $program->name() . '" up and running for ' . $this->formatUptime($program));
-
-        $this->shutdown->onCompleted();
     }
 
     private function formatUptime(ProgramInterface $program): string
