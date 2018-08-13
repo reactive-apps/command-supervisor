@@ -12,7 +12,7 @@ return [
         LoggerInterface $logger,
         Shutdown $shutdown,
         string $host,
-        string $name
+        string $name = ''
     ) {
         return new RestartSupervisor(
             AsyncClient::create(
