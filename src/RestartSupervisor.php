@@ -53,10 +53,12 @@ final class RestartSupervisor implements Command
     {
         if ($this->name === '') {
             yield from $this->restartSupervisor();
+            $this->shutdown->onCompleted();
+
+            return;
         }
 
         yield from $this->restartProgram();
-
         $this->shutdown->onCompleted();
     }
 
