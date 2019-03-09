@@ -4,6 +4,7 @@
         "php": "^7.2",
         "api-clients/supervisord": "^1.0",
         "cakephp/chronos": "^1.1",
+        "php-di-definitions/api-clients-supervisord": "dev-master",
         "psr/log": "^1.0",
         "reactive-apps/command": "dev-master",
         "reactive-apps/rx-streams": "dev-master",
